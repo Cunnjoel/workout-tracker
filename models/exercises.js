@@ -19,32 +19,32 @@ const exercisesSchema = new Schema({
             required: "Enter a name for transaction"
           },
         duration: {
-            type: Numeral,
+            type: Number,
             trim: true
         },
         weight: {
-            type: Numeral,
+            type: Number,
             trim: true
         },
         reps: {
-            type: Numeral,
+            type: Number,
             trim: true
         },
         sets: {
-            type: Numeral,
+            type: Number,
             trim: true
         },
         cardio: {
-            type: Boolian,
+            type: Boolean,
             trim:true
         },
         distance: {
-            type: Numeral,
+            type: Number,
             trim: true
         }
     }]
 });
 
-const Transaction = mongoose.model("Transaction", transactionSchema);
+const Exercise = mongoose.model("Exercise", exercisesSchema);
 
-module.exports = Transaction;
+module.exports = Exercise;
