@@ -1,8 +1,7 @@
 const router = require("express").Router();
-const { db } = require("../models/workout.js");
 const Workout = require("../models/workout.js");
 
-router.post("/api/workouts", ({ body }, res) => {
+router.post("/api/workouts", (req, res) => {
     Workout.create({})
     .then(dbWorkout => {
         res.json(dbWorkout);
@@ -15,7 +14,7 @@ router.post("/api/workouts", ({ body }, res) => {
 router.put("/api/workouts/:id", ({ body, params }, res) => {
     Workout.findOneAndUpdate(
         params.id,
-        { $push: { exercise: body } },
+        { $push: { exercises: body } },
         { new: true, runValidators: true}
         )
         .then((dbWorkout) => {
@@ -26,12 +25,12 @@ router.put("/api/workouts/:id", ({ body, params }, res) => {
         });
     });
 
-router.get("/api/exercise", (req, res) => {
+router.get("/api/workouts", (req, res) => {
     Workout.aggregate([
         {
             $addFields: {
                 totalDuration: {
-                    $sum: '$exercise.duratoin',
+                    $sum: "$exercises.duration",
                 },
             },
         },
@@ -44,17 +43,17 @@ router.get("/api/exercise", (req, res) => {
     });
 });
 
-router.get('/api/workout/range', (req, res) => {
+router.get("/api/workout/range", (req, res) => {
     Workout.aggregate([
         {
             $addFields: {
                 totalDuration: {
-                    $sum: '$exercise.duration',
+                    $sum: "$exercises.duration",
                 },
             },
         },
     ])
-    .sort({ _id: -1})
+    .sort({ _id: -1 })
     .limit(7)
     .then((dbWorkouts) => {
         console.log(dbWorkouts);
@@ -62,7 +61,7 @@ router.get('/api/workout/range', (req, res) => {
     });
 });
 
-router.delete('/api/workouts', ({ body }, res) => {
+router.delete("/api/workouts", ({ body }, res) => {
     Workout.findByIdAndDelete(body.id)
     .then(() => {
         res.json(true);
